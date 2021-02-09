@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Playground 2020 presidential election margins (preliminary results)</title>
+    <style>
+      body {
+        text-align: center;
+        font-size: 13em;
+        overflow: hidden;
+      }
+
+      .counties {
+        fill: none;
+      }
+
+      .states {
+        fill: lightgray;
+      }
+
+      .state-borders {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 1px;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+  			pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="960" height="600"></svg>
+  </body>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"></script>
+  <script>
+    const svg = d3.select('svg');
+
+    
+    const projection = d3.geoAlbersUsa();
+    const path = d3.geoPath(projection);
+    
+    var color = d3.scaleLinear()
+      .domain([20,50,80])
+      .range(['blue','purple','red']);
+
+    Promise.all([
+      d3.json('https://unpkg.com/us-atlas@3.0.0/states-10m.json'),
+    	d3.json('fipsToState.json'),
+    	d3.json('state_centers_formatted_with_suggested_zoom.json'),
+      d3.json('https://static01.nyt.com/elections-assets/2020/data/api/2020-11-03/national-map-page/national/president.json'),
+      d3.csv('https://raw.githubusercontent.com/almccon/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv')
+      ]).then(function(results) {
+        let us = results[0];
+        let fipsToState = results[1];
+        let stateCentroids = results[2];
+        let nytresults2020 = results[3];
+        let results2020 = results[4];
+
+        const states = svg
+          .append('g')
+          .attr('class', 'states')
+          .selectAll('path')
+          .data(topojson.feature(us, us.objects.states).features)
+          .enter()
+          .append('path')
+          .attr('d', path);
+
+        svg
+          .append('g')
+          .attr('class', 'state-borders')
+          .selectAll('path')
+          .data(topojson.feature(us, us.objects.states).features)
+          .enter()
+          .append('path')
+          .attr('d', path);
+
+        var stateLookup = {};
+        var nytstateLookup = {};
+      
+        // Use this code to pull from the static file instead of the New York Times
+        /*
+        results2020.forEach(function(county) {
+          // This file has counties, but I want the state results
+          if (!stateLookup.hasOwnProperty(county.state_name)) {
+            stateLookup[county.state_name] = {
+              votes_gop: 0,
+              votes_dem: 0,
+              total_votes: 0,
+            };	
+          }
+          stateLookup[county.state_name].votes_gop += +county.votes_gop;
+          stateLookup[county.state_name].votes_dem += +county.votes_dem;
+          stateLookup[county.state_name].total_votes += +county.total_votes;
+        });
+        */
+        nytresults2020.data.races.forEach(function(state) {
+          state.counties.forEach(function(county) {
+            // This file has counties, but I want the state results
+            if (!nytstateLookup.hasOwnProperty(state.state_name)) {
+              nytstateLookup[state.state_name] = {
+                votes_gop: 0,
+                votes_dem: 0,
+                total_votes: 0,
+              };	
+            }
+            nytstateLookup[state.state_name].votes_gop += +county.results.trumpd;
+            nytstateLookup[state.state_name].votes_dem += +county.results.bidenj;
+            nytstateLookup[state.state_name].total_votes += +county.votes;
+          });
+        });
+      	stateLookup = nytstateLookup;
+      
+        let stateCircleGroup = svg.append("g").attr("id", "stateCircles");
+        let stateRingGroup = svg.append("g").attr("id", "stateRings");
+        
+        const circleRadius = d3.scaleSqrt()
+        	.domain([0, d3.max(d3.keys(stateLookup), function(d) { return +stateLookup[d].votes_dem; })])
+        	.range([0, 50]); // 0 to maximum radius in pixels
+
+        let arcGenerator = d3.arc()
+        	.innerRadius(10)
+        	.outerRadius(20)
+        	.startAngle(0)
+        	.endAngle(2*Math.PI);
+      	function generateArc(d) {
+          let inner = 0;
+          let outer = 0;
+          let gop = 0;
+          let dem = 0;
+          if (stateLookup[d.name]) {
+            gop = circleRadius(+stateLookup[d.name].votes_gop)
+            dem = circleRadius(+stateLookup[d.name].votes_dem)
+          }
+          if (gop > dem) {
+            inner = dem;
+            outer = gop;
+          } else {
+            inner = gop;
+            outer = dem;
+          }
+          let arcGen = d3.arc()
+            .innerRadius(inner)
+            .outerRadius(outer)
+            .startAngle(0)
+            .endAngle(2*Math.PI);
+          return arcGen(d);
+        }
+      
+        let stateRings = stateRingGroup.selectAll("path")
+            .data(stateCentroids)
+          .enter()
+        		.append("path")
+        		.attr("d", d => {return generateArc(d)})
+        		.attr("transform", d => {
+              return "translate(" + projection([+d.lon,+d.lat]) + ")";
+            })
+            .style("fill", function(d) {
+              if (stateLookup[d.name] && (+stateLookup[d.name].votes_gop > +stateLookup[d.name].votes_dem)) {
+                return 'crimson';
+              } else if (stateLookup[d.name] && (+stateLookup[d.name].votes_gop < +stateLookup[d.name].votes_dem)) {
+                return 'royalblue';
+              } else {
+                return 'black';
+              }
+            })
+            .classed("countycircle", true);
+
+        svg.attr('transform', 'scale(.75) translate(0,-80)');
+      });
+  </script>
+</html>

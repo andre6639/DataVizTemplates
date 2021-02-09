@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Barchart</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles.css">
+    <script src='https://unpkg.com/d3@6.2.0/dist/d3.min.js'></script>
+  </head>
+  <body>
+		<form id="sorg">
+			<label>
+				<input type="radio" name="radio" value="stacked" checked> Stacked
+      </label>
+  		<label>
+				<input type="radio" name="radio" value="grouped"> Grouped
+			</label>
+		</form>
+    <div id="chartContainer">
+      <svg width="900" height="500"></svg>
+    </div>
+    <script src="bundle.js"></script>
+  </body>
+</html>

@@ -1,0 +1,3 @@
+.on('mouseover', (data, i) => tooltip(data, i));
+console.log(y01z[datapoint[2]].indexOf(datapoint)+1)
+function(){return tooltip.style("top", (event.pageY-20)+"px").style("left",(event.pageX+40)+"px");}

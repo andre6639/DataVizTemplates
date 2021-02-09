@@ -1,0 +1,16 @@
+label {
+	margin-right: 1em;
+  display: inline-flex;
+  align-items: center;
+}
+
+form {
+	font: 12px var(--sans-serif);
+  display: flex;
+  height: 33px;
+  align-items: center;
+}
+
+input {
+	margin-right: 0.5em;
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "date": "2020-01-01",
+    "item": "gunz",
+    "value": 14
+  },
+  {
+    "date": "2020-01-02",
+    "item": "gunz",
+    "value": 17
+  },
+  {
+    "date": "2020-01-03",
+    "item": "gunz",
+    "value": 97
+  },
+  {
+    "date": "2020-01-04",
+    "item": "gunz",
+    "value": 8
+  },
+  {
+    "date": "2020-01-05",
+    "item": "gunz",
+    "value": 28
+  },
+  {
+    "date": "2020-01-06",
+    "item": "gunz",
+    "value": 94
+  },
+  {
+    "date": "2020-01-07",
+    "item": "gunz",
+    "value": 21
+  },
+  {
+    "date": "2020-01-01",
+    "item": "roses",
+    "value": 72
+  },
+  {
+    "date": "2020-01-02",
+    "item": "roses",
+    "value": 14
+  },
+  {
+    "date": "2020-01-03",
+    "item": "roses",
+    "value": 97
+  },
+  {
+    "date": "2020-01-04",
+    "item": "roses",
+    "value": 1
+  },
+  {
+    "date": "2020-01-05",
+    "item": "roses",
+    "value": 48
+  },
+  {
+    "date": "2020-01-06",
+    "item": "roses",
+    "value": 70
+  },
+  {
+    "date": "2020-01-07",
+    "item": "roses",
+    "value": 96
+  },
+  {
+    "date": "2020-01-01",
+    "item": "chocolate",
+    "value": 74
+  },
+  {
+    "date": "2020-01-02",
+    "item": "chocolate",
+    "value": 32
+  },
+  {
+    "date": "2020-01-03",
+    "item": "chocolate",
+    "value": 57
+  },
+  {
+    "date": "2020-01-04",
+    "item": "chocolate",
+    "value": 146
+  },
+  {
+    "date": "2020-01-05",
+    "item": "chocolate",
+    "value": 104
+  },
+  {
+    "date": "2020-01-06",
+    "item": "chocolate",
+    "value": 78
+  },
+  {
+    "date": "2020-01-07",
+    "item": "chocolate",
+    "value": 54
+  }
+]
