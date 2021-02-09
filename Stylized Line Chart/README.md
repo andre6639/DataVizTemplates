@@ -1,0 +1,1 @@
+A week of Temperature in San Francisco, data provided by [Curran](https://gist.githubusercontent.com/curran/60b40877ef898f19aeb8/raw/9476be5bd15fb15a6d5c733dd79788fb679c9be9/week_temperature_sf.csv).
